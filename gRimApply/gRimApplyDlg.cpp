@@ -54,6 +54,16 @@ CgRimApplyDlg::CgRimApplyDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_GRIMAPPLY_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	_frameBuffer.Create(RES_WIDTH, -RES_HEIGHT, DEPTH);
+	//컬러테이블 설정. 256단계 그레이스케일
+	static RGBQUAD rgb[256];
+	for (int i = 0; i < 256; i++)
+	{
+		rgb[i].rgbRed = i;
+		rgb[i].rgbGreen = i;
+		rgb[i].rgbBlue = i;
+	}
+	_frameBuffer.SetColorTable(0, 256, rgb);
 }
 
 void CgRimApplyDlg::DoDataExchange(CDataExchange* pDX)
@@ -65,6 +75,10 @@ BEGIN_MESSAGE_MAP(CgRimApplyDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BTN_INIT, &CgRimApplyDlg::OnBnClickedBtnInit)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 
@@ -153,3 +167,52 @@ HCURSOR CgRimApplyDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CgRimApplyDlg::OnBnClickedBtnInit()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CClientDC dc(this);
+	BYTE* frame = (BYTE*)_frameBuffer.GetBits();
+	int width = _frameBuffer.GetWidth();
+	int height = _frameBuffer.GetHeight();
+	int pitch = _frameBuffer.GetPitch();
+
+	// clear frameBuffer
+	memset(frame, 0xFF, pitch * height);
+
+	_frameBuffer.Draw(dc, 0, 0);
+}
+
+
+void CgRimApplyDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	TRACE(_T("%d, %d\n"), point.x, point.y);
+	_isAbleToDrag = true;
+
+	CDialogEx::OnLButtonDown(nFlags, point);
+}
+
+
+void CgRimApplyDlg::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (_isAbleToDrag)
+	{
+		// 선택한 도트를 드래그 하는 루틴
+		TRACE(_T("d(%d, %d)\n"), point.x, point.y);
+	}
+	CDialogEx::OnMouseMove(nFlags, point);
+}
+
+
+void CgRimApplyDlg::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	_isAbleToDrag = false;
+
+	// 도트가 움직인 위치를 최종 결정
+
+	CDialogEx::OnLButtonUp(nFlags, point);
+}
