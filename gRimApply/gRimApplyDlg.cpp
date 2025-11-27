@@ -65,6 +65,30 @@ CgRimApplyDlg::CgRimApplyDlg(CWnd* pParent /*=nullptr*/)
 	}
 	_frameBuffer.SetColorTable(0, 256, rgb);
 }
+/// @brief 화면의 점을 렌더링한다.
+void CgRimApplyDlg::RenderDots()
+{
+	//Dots를 확인하고 해당 위치에 그림.
+	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	BYTE* frame = (BYTE*)_frameBuffer.GetBits();
+
+	if (!frame)
+		return;
+
+	//Dots 자료구조를 가져와서 해당정보대로 프레임버퍼에 그림. 
+
+}
+/// @brief 화면의 정원을 렌더링한다.
+void CgRimApplyDlg::RenderCircle()
+{
+
+}
+/// @brief 프레임버퍼를 화면에 그린다.
+void CgRimApplyDlg::DrawFrame()
+{
+	CClientDC dc(this);
+	_frameBuffer.Draw(dc, 0, 0);
+}
 
 void CgRimApplyDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -114,6 +138,13 @@ BOOL CgRimApplyDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	BYTE* frame = (BYTE*)_frameBuffer.GetBits();
+	int width = _frameBuffer.GetWidth();
+	int height = _frameBuffer.GetHeight();
+	int pitch = _frameBuffer.GetPitch();
+
+	// clear frameBuffer
+	memset(frame, 0xFF, pitch * height);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -156,6 +187,7 @@ void CgRimApplyDlg::OnPaint()
 	}
 	else
 	{
+		DrawFrame();
 		CDialogEx::OnPaint();
 	}
 }
@@ -172,7 +204,7 @@ HCURSOR CgRimApplyDlg::OnQueryDragIcon()
 void CgRimApplyDlg::OnBnClickedBtnInit()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CClientDC dc(this);
+
 	BYTE* frame = (BYTE*)_frameBuffer.GetBits();
 	int width = _frameBuffer.GetWidth();
 	int height = _frameBuffer.GetHeight();
@@ -181,16 +213,27 @@ void CgRimApplyDlg::OnBnClickedBtnInit()
 	// clear frameBuffer
 	memset(frame, 0xFF, pitch * height);
 
-	_frameBuffer.Draw(dc, 0, 0);
+	Invalidate(FALSE);
+	//DrawFrame();
 }
 
 
 void CgRimApplyDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	// 클릭해서 도트를 그리고 선택하는 루틴
 	TRACE(_T("%d, %d\n"), point.x, point.y);
-	_isAbleToDrag = true;
+	if (!_isAbleToDrag)
+		_isAbleToDrag = true;
 
+	bool res = theApp.AddDot((int)point.x, (int)point.y);
+	//도트가 있다면 도트를 렌더링.
+	RenderDots();
+	//도트가 3개 모였다면 정원을 활성화 하고 정원을 렌더링. 
+	if (!res)
+	{
+		RenderCircle();
+	}
 	CDialogEx::OnLButtonDown(nFlags, point);
 }
 

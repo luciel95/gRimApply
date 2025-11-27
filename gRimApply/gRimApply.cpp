@@ -28,6 +28,7 @@ CgRimApplyApp::CgRimApplyApp()
 
 	// TODO: 여기에 생성 코드를 추가합니다.
 	// InitInstance에 모든 중요한 초기화 작업을 배치합니다.
+	_circle = nullptr;
 }
 
 
@@ -103,5 +104,30 @@ BOOL CgRimApplyApp::InitInstance()
 	// 대화 상자가 닫혔으므로 응용 프로그램의 메시지 펌프를 시작하지 않고 응용 프로그램을 끝낼 수 있도록 FALSE를
 	// 반환합니다.
 	return FALSE;
+}
+
+bool CgRimApplyApp::AddDot(int x, int y)
+{
+	if (3 > _dots.GetCount())
+	{
+		int i = _dots.GetCount();
+		return _dots.AddDot(x, y);
+	}
+	return false;
+}
+
+void CgRimApplyApp::CreateCircle(int x, int y, double radius, int thick = 2)
+{
+	DeleteCircle();
+	_circle = new LineCircle(x, y, radius, thick);
+}
+
+void CgRimApplyApp::DeleteCircle()
+{
+	if (_circle)
+	{
+		delete _circle;
+		_circle = nullptr;
+	}
 }
 

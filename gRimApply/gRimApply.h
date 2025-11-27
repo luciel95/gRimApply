@@ -25,8 +25,8 @@ public:
 	}
 	void SetCircle(int x, int y, double radius)
 	{
-		_x = 0;
-		_y = 0;
+		_x = x;
+		_y = y;
 		_radius = radius;
 	}
 	int GetX()
@@ -43,18 +43,47 @@ const double DOT_RAD = 2.0;
 class Dots
 {
 private:
-	int _dotCount = 0;
+	int _dotCount;
 	byte _dotColor;
-	Circle Dot[3];
+	Circle _dot[3];
 
 public:
 	Dots()
 	{
-		;
+		_dotColor = 0x80;
+		_dotCount = 0;
 	}
-
+	
+	int GetCount()
+	{
+		return _dotCount;
+	}
+	Circle GetDot(int index)
+	{
+		if (index < 0 || index >= 3)
+			return Circle();
+		return _dot[index];
+	}
+	bool AddDot(int x, int y) 
+	{
+		if (_dotCount == 3)
+			return false;
+		_dot[_dotCount++].SetCircle(x, y, DOT_RAD);
+		if (_dotCount == 3)
+			return false; // limit reached.
+		else
+			return true;
+	}
+	void Clear()
+	{
+		_dotColor = 0x80;
+		_dotCount = 0;
+		_dot[0].SetCircle(0, 0, DOT_RAD);
+		_dot[1].SetCircle(0, 0, DOT_RAD);
+		_dot[2].SetCircle(0, 0, DOT_RAD);
+	}
 };
-
+/// @brief 
 class LineCircle : public Circle 
 {
 private:
@@ -62,13 +91,24 @@ private:
 public:
 	LineCircle()
 	{
-
+		_thick = 2;
+		SetCircle(0, 0, 0.0);
 	}
+	LineCircle(int x, int y, double radius, int thick = 2)
+	{
+		_thick = thick;
+		SetCircle(x, y, radius);
+	}
+	void SetThickness(int value) 
+	{
+		_thick = value;
+	}
+
 };
+
 // CgRimApplyApp:
 // 이 클래스의 구현에 대해서는 gRimApply.cpp을(를) 참조하세요.
 //
-
 class CgRimApplyApp : public CWinApp
 {
 public:
@@ -80,6 +120,11 @@ public:
 
 // 구현입니다.
 	Dots _dots;
+	LineCircle* _circle;
+
+	bool AddDot(int x, int y);
+	void CreateCircle(int x, int y, double radius, int thick);
+	void DeleteCircle();
 
 	DECLARE_MESSAGE_MAP()
 };
