@@ -1,0 +1,27 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(vector<vector<int>> dots) {
+    int answer = 0;
+    int top = -256;
+    int bottom = 256;
+    int left = 256;
+    int right = -256;
+    
+    for (int j  = 0; j < 4; j ++)
+    {
+        if ( left > dots[j][0])
+            left = dots[j][0];
+        if ( right < dots[j][0])
+            right = dots[j][0];
+        
+        if ( top < dots[j][1])
+            top = dots[j][1];
+        if ( bottom > dots[j][1])
+            bottom = dots[j][1];        
+    }
+    
+    return answer = (top - bottom) * (right - left);
+}
