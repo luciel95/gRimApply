@@ -15,8 +15,11 @@ class CgRimApplyDlg : public CDialogEx
 public:
 	CgRimApplyDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 	void RenderDots();
-	void RenderCircle();
+	void RenderLineCcl();
+	void RenderCircle(Circle circle);
 	void DrawFrame();
+	void ClearFrame();
+	bool IsInCircle(int x, int y, int cx, int cy, double radius);
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -32,6 +35,7 @@ public:
 protected:
 	HICON m_hIcon;
 	bool _isAbleToDrag = false;
+	int _selected = -1;
 
 	// 생성된 메시지 맵 함수
 	virtual BOOL OnInitDialog();
@@ -44,4 +48,7 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	// 원주의 두께, 초기값 2
+	int _editThick;
+	afx_msg void OnChangeEditThk();
 };

@@ -122,6 +122,75 @@ void CgRimApplyApp::CreateCircle(int x, int y, double radius, int thick = 2)
 	_circle = new LineCircle(x, y, radius, thick);
 }
 
+CgRimApplyApp::~CgRimApplyApp()
+{
+	if (_circle)
+	{
+		delete _circle;
+		_circle = nullptr;
+	}
+}
+
+Dots CgRimApplyApp::GetDots()
+{
+	return Dots(_dots);
+}
+/// @brief 클릭 시 포인터가 도트 영역에 있는지 확인, 있다면 해당 인덱스 반환
+/// @param x 포인터 x
+/// @param y 포인터 y
+/// @return 인덱스/ 없으면 -1;
+int CgRimApplyApp::IsInTheDot(int x, int y)
+{
+	double dx = 0;
+	double dy = 0;
+	double distance = 0;
+
+	for (int i = 0; i < 3; i++)
+	{
+		Circle dot = _dots.GetDot(i);
+
+		dx = x - dot.GetX();
+		dy = y - dot.GetY();
+		distance = sqrt((dx * dx) + (dy * dy));
+		if (distance < dot.GetRadius())
+			return i;
+	}
+	return -1;
+}
+/// @brief _dots 3개 점으로 외접원을 생성.
+/// @return 성공/ 실패
+bool CgRimApplyApp::GenCircumccl()
+{
+	if (3 != _dots.GetCount())
+		return false; //원을 생성할 수 없다. 
+	if (nullptr == _circle)
+		return false; //정원이 생성되지 않았다. 
+
+	int x1 = (_dots.GetDot(0)).GetX();
+	int y1 = (_dots.GetDot(0)).GetY();
+	int x2 = (_dots.GetDot(1)).GetX();
+	int y2 = (_dots.GetDot(1)).GetY();
+	int x3 = (_dots.GetDot(2)).GetX();
+	int y3 = (_dots.GetDot(2)).GetY();
+
+	int cX = 0; 
+	int cY = 0;
+	double radius = 0.0;
+
+	cX = (int)( (x1*x1 + y1*y1)*(y2 - y3) + (x2*x2 + y2*y2)*(y3 - y1) + (x3*x3 + y3*y3)*(y1 - y2) ) 
+		/ (2 * ( x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) );
+	cY = (int)( (x1*x1 + y1*y1)*(x3 - x2) + (x2*x2 + y2*y2)*(x1 - x3) + (x3*x3 + y3*y3)*(x2 - x1) ) 
+		/ (2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) );
+	radius = sqrt(((x1 - cX) * (x1 - cX)) + ((y1 - cY) * (y1 - cY)));
+	// 반지름이 무한대가 나오지 않도록 
+	if (80000 < radius)
+		return false;
+
+	_circle->SetCircle(cX, cY, radius);
+
+	return true;
+}
+
 void CgRimApplyApp::DeleteCircle()
 {
 	if (_circle)
