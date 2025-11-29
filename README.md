@@ -1,3 +1,10 @@
+##(주)그림 입사지원을 위한 과제 1 
+### 1. 개요
+- 다음의 요구사항을 만족하는 프로그램을 MFC 기반으로 작성한다.
+   - 과제 링크 https://doc.clickup.com/25596452/p/h/rd4h4-262778/9faf6d2e66ff9e7
+   - 유튜브 에서 안내한 방법으로 구현하고 불필요한 드로잉 라이브러리는 사용하지 않는다.
+- 클래스 구조
+![클래스 구조](https://github.com/luciel95/gRimApply/blob/master/%ED%81%B4%EB%9E%98%EC%8A%A4%20%EA%B5%AC%EC%A1%B0.png?raw=true)
 
 ## 개발노트
 과제 페이지 링크 https://doc.clickup.com/25596452/p/h/rd4h4-262778/9faf6d2e66ff9e7
