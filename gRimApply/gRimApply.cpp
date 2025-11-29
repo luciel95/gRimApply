@@ -107,7 +107,10 @@ BOOL CgRimApplyApp::InitInstance()
 	// 반환합니다.
 	return FALSE;
 }
-
+/// @brief _dots 에 입력된 좌표로 circle형 도트를 추가한다.
+/// @param x 좌표
+/// @param y 좌표
+/// @return 성공/ 실패
 bool CgRimApplyApp::AddDot(int x, int y)
 {
 	if (3 > _dots.GetCount())
@@ -117,7 +120,11 @@ bool CgRimApplyApp::AddDot(int x, int y)
 	}
 	return false;
 }
-
+/// @brief 입력된 정보로 _circle 생성
+/// @param x 중점
+/// @param y 중점
+/// @param radius 반지름 
+/// @param thick 선 두께
 void CgRimApplyApp::CreateCircle(int x, int y, double radius, int thick = 2)
 {
 	DeleteCircle();
@@ -132,7 +139,8 @@ CgRimApplyApp::~CgRimApplyApp()
 		_circle = nullptr;
 	}
 }
-
+/// @brief _dots 반환
+/// @return Dots 인스턴스
 Dots CgRimApplyApp::GetDots()
 {
 	return Dots(_dots);
@@ -222,21 +230,21 @@ bool CgRimApplyApp::GenCircumccl()
 	int cX = 0; 
 	int cY = 0;
 	double radius = 0.0;
-
+	// 외접원의 중점 계산
 	cX = (int)( (x1*x1 + y1*y1)*(y2 - y3) + (x2*x2 + y2*y2)*(y3 - y1) + (x3*x3 + y3*y3)*(y1 - y2) ) 
 		/ (2 * ( x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) );
 	cY = (int)( (x1*x1 + y1*y1)*(x3 - x2) + (x2*x2 + y2*y2)*(x1 - x3) + (x3*x3 + y3*y3)*(x2 - x1) ) 
 		/ (2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) );
 	radius = sqrt(((x1 - cX) * (x1 - cX)) + ((y1 - cY) * (y1 - cY)));
-	// 반지름이 무한대가 나오지 않도록 
+	
 	if (80000 < radius)
-		return false;
+		return false; // 반지름이 무한대가 나오지 않도록 예외처리
 
 	_circle->SetCircle(cX, cY, radius);
 
 	return true;
 }
-
+/// @brief _circle 해제 후 소거
 void CgRimApplyApp::DeleteCircle()
 {
 	if (_circle)

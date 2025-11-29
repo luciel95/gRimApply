@@ -9,7 +9,7 @@
 #endif
 
 #include "resource.h"		// 주 기호입니다.
-
+/// @brief 원 정의 클래스
 class Circle
 {
 private :
@@ -64,6 +64,7 @@ public:
 
 const double DOT_RAD = 6.0; //도트의 반지름
 const int DOT_COLR = 0x80; //도트 색
+/// @brief 도트 클래스
 class Dots
 {
 private:
@@ -114,7 +115,7 @@ public:
 		_dot[2].SetCircle(0, 0, DOT_RAD);
 	}
 };
-/// @brief 
+/// @brief 정원 클래스
 class LineCircle : public Circle 
 {
 private:

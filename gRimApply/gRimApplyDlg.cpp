@@ -436,7 +436,6 @@ void CgRimApplyDlg::OnBnClickedBtnRndmov()
 	//RandomCreate();
 }
 
-
 void CgRimApplyDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
@@ -448,7 +447,10 @@ void CgRimApplyDlg::OnDestroy()
 		_thread.join();
 	}
 }
-
+/// @brief WM_UPDATE_FRAME 이벤트 핸들러
+/// @param wParam 사용안함
+/// @param lParam 사용안함
+/// @return 사용안함
 afx_msg LRESULT CgRimApplyDlg::OnUpdateFrame(WPARAM wParam, LPARAM lParam)
 {
 	ClearFrame();
