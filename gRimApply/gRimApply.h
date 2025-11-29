@@ -90,22 +90,34 @@ public:
 			return Circle();
 		return _dot[index];
 	}
-	bool AddDot(int x, int y) 
+	bool AddDot(int x, int y, int radius) 
 	{
 		if (_dotCount == 3)
 			return false;
-		_dot[_dotCount++].SetCircle(x, y, DOT_RAD, DOT_COLR);
+		_dot[_dotCount++].SetCircle(x, y, (double)radius, DOT_COLR);
 		if (_dotCount == 3)
 			return false; // limit reached.
 		else
 			return true;
 	}
-	bool SetDot(int index, int x, int y)
+	bool SetDot(int index, int x, int y, int radius)
 	{
 		if (index >= _dotCount || index < 0)
 			return false;
-		_dot[index].SetCircle(x, y, DOT_RAD, DOT_COLR);
+		_dot[index].SetCircle(x, y, (double)radius, DOT_COLR);
 		return true;
+	}
+	void SetDotColor(int index, int color)
+	{
+		if (index >= _dotCount || index < 0)
+			return;
+		_dot[index].SetColor(color);
+	}
+	void SetDotRad(int index, double radius)
+	{
+		if (index >= _dotCount || index < 0)
+			return;
+		_dot[index].SetRadius(radius);
 	}
 	void Clear()
 	{
@@ -159,10 +171,11 @@ public:
 	LineCircle* _circle;
 
 	Dots GetDots();
-	bool AddDot(int x, int y);
+	bool AddDot(int x, int y, int radius);
 	int IsInTheDot(int x, int y);
 	bool IsDotExist(int x, int y);
-	bool GenRandDots();
+	bool GenRandDots(int dotRad);
+	void SetDotsRad(int radius);
 	void CreateCircle(int x, int y, double radius, int thick);
 	bool GenCircumccl();
 	void DeleteCircle();

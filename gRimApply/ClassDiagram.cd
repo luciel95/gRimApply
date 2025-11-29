@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CAboutDlg" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="CAboutDlg::__unnamed_enum_0002_1" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>gRimApplyDlg.cpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gRimApplyDlg.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Circle">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAAAAAAIAAQIAAAAAAAAAAAAAAgAAACAYAgAAAiAAgA=</HashCode>
+      <FileName>gRimApply.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dots">
+    <Position X="2.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAABAAAAAAAAAAAAAIAACAAAAAAIAAAAAABABAAAA=</HashCode>
+      <FileName>gRimApply.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LineCircle">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>gRimApply.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CgRimApplyApp">
+    <Position X="4.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAgAAAAAQAAAAAQAAAEAAAEBAAAQAIEAABAABEAA=</HashCode>
+      <FileName>gRimApply.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CgRimApplyDlg">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="CgRimApplyDlg::__unnamed_enum_0006_1" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>gRimApplyDlg.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>GACBAAFABAECAAAAABAhAABAABQAAAUwIABACBAQCIA=</HashCode>
+      <FileName>gRimApplyDlg.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

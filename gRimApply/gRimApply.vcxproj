@@ -206,6 +206,7 @@
     <ResourceCompile Include="gRimApply.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="res\gRimApply.rc2" />
   </ItemGroup>
   <ItemGroup>

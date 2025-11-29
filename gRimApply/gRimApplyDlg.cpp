@@ -54,6 +54,7 @@ END_MESSAGE_MAP()
 CgRimApplyDlg::CgRimApplyDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_GRIMAPPLY_DIALOG, pParent)
 	, _editThick(0)
+	, _editDotRad(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	_frameBuffer.Create(RES_WIDTH, -RES_HEIGHT, DEPTH);
@@ -73,10 +74,17 @@ void CgRimApplyDlg::RenderDots()
 	//Dots를 확인하고 해당 위치에 그림.
 	Dots dots = theApp._dots;
 	int count = dots.GetCount();
+	CString dotPos = _T("");
+	CString posOut = _T("");
 	for (int i = 0; i < count; i++)
 	{
 		Circle circle = dots.GetDot(i);
 		RenderCircle(circle);
+		dotPos.Format(_T("%d :(%d,%d)\n"), i+1, circle.GetX(), circle.GetY());
+		posOut += dotPos;
+		_staticDotPos.SetWindowTextW(posOut);
+
+		Invalidate(FALSE);
 	}
 }
 /// @brief 정원 렌더링. 
@@ -182,7 +190,7 @@ void CgRimApplyDlg::RandomCreate()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		theApp.GenRandDots();
+		theApp.GenRandDots(_editDotRad);
 		theApp.GenCircumccl();
 
 		PostMessage(WM_UPDATE_FRAME, 0, 0);
@@ -196,6 +204,9 @@ void CgRimApplyDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_THK, _editThick);
 	DDV_MinMaxInt(pDX, _editThick, 1, 64);
+	DDX_Text(pDX, IDC_EDIT_DOTRAD, _editDotRad);
+	DDV_MinMaxInt(pDX, _editDotRad, 2, 32);
+	DDX_Control(pDX, IDC_TXT_1, _staticDotPos);
 }
 
 BEGIN_MESSAGE_MAP(CgRimApplyDlg, CDialogEx)
@@ -207,6 +218,7 @@ BEGIN_MESSAGE_MAP(CgRimApplyDlg, CDialogEx)
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONUP()
 	ON_EN_CHANGE(IDC_EDIT_THK, &CgRimApplyDlg::OnChangeEditThk)
+	ON_EN_CHANGE(IDC_EDIT_DOTRAD, &CgRimApplyDlg::OnEnChangeEditDotrad)
 	ON_BN_CLICKED(IDC_BTN_RNDMOV, &CgRimApplyDlg::OnBnClickedBtnRndmov)
 	ON_WM_DESTROY()
 	ON_MESSAGE(WM_UPDATE_FRAME, &CgRimApplyDlg::OnUpdateFrame)
@@ -251,6 +263,7 @@ BOOL CgRimApplyDlg::OnInitDialog()
 	int pitch = _frameBuffer.GetPitch();
 
 	_editThick = 2;
+	_editDotRad = 6;
 	UpdateData(FALSE);
 	// clear frameBuffer
 	memset(frame, 0xFF, pitch * height);
@@ -323,6 +336,8 @@ void CgRimApplyDlg::OnBnClickedBtnInit()
 	memset(frame, 0xFF, pitch * height);
 	theApp._dots.Clear();
 	theApp.DeleteCircle();
+
+	_staticDotPos.SetWindowTextW(_T("점 좌표"));
 	Invalidate(FALSE);
 	//DrawFrame();
 }
@@ -348,7 +363,7 @@ void CgRimApplyDlg::OnLButtonDown(UINT nFlags, CPoint point)
 		CDialogEx::OnLButtonDown(nFlags, point);
 		return;
 	}
-	bool res = theApp.AddDot((int)point.x, (int)point.y);
+	bool res = theApp.AddDot((int)point.x, (int)point.y, _editDotRad);
 	// clear buffer	
 	ClearFrame();	
 
@@ -374,7 +389,7 @@ void CgRimApplyDlg::OnMouseMove(UINT nFlags, CPoint point)
 		// 선택한 도트를 드래그 하는 루틴
 		ClearFrame();
 		TRACE(_T("d(%d, %d)\n"), point.x, point.y);
-		theApp._dots.SetDot(_selected, (int)point.x, (int)point.y);
+		theApp._dots.SetDot(_selected, (int)point.x, (int)point.y, _editDotRad);
 		bool res = theApp.GenCircumccl();
 		RenderLineCcl();
 		RenderDots();
@@ -416,6 +431,23 @@ void CgRimApplyDlg::OnChangeEditThk()
 	Invalidate(FALSE);
 }
 
+void CgRimApplyDlg::OnEnChangeEditDotrad()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CDialogEx::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	UpdateData(TRUE);
+	
+	theApp.SetDotsRad(_editDotRad);
+	ClearFrame();
+	RenderLineCcl();
+	RenderDots();
+
+	Invalidate(FALSE);
+}
 void CgRimApplyDlg::OnBnClickedBtnRndmov()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -459,3 +491,4 @@ afx_msg LRESULT CgRimApplyDlg::OnUpdateFrame(WPARAM wParam, LPARAM lParam)
 	Invalidate(FALSE);
 	return 0;
 }
+

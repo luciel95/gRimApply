@@ -111,12 +111,12 @@ BOOL CgRimApplyApp::InitInstance()
 /// @param x 좌표
 /// @param y 좌표
 /// @return 성공/ 실패
-bool CgRimApplyApp::AddDot(int x, int y)
+bool CgRimApplyApp::AddDot(int x, int y, int radius)
 {
 	if (3 > _dots.GetCount())
 	{
 		int i = _dots.GetCount();
-		return _dots.AddDot(x, y);
+		return _dots.AddDot(x, y, radius);
 	}
 	return false;
 }
@@ -184,7 +184,7 @@ bool CgRimApplyApp::IsDotExist(int x, int y)
 }
 /// @brief 무작위로 도트 셋을 생성
 /// @return 성공/ 실패
-bool CgRimApplyApp::GenRandDots()
+bool CgRimApplyApp::GenRandDots(int dotRad)
 {
 	// 랜덤 생성 
 	int x = 0;
@@ -206,10 +206,19 @@ bool CgRimApplyApp::GenRandDots()
 
 			isRegen = IsDotExist(x, y);
 		} while (isRegen);
-		AddDot(x, y);
+		AddDot(x, y, dotRad);
 		isRegen = true;
 	}
 	return true;
+}
+/// @brief _dots의 원 반지름을 일괄 설정
+/// @param radius 
+void CgRimApplyApp::SetDotsRad(int radius)
+{
+	for (int i = 0; i < _dots.GetCount(); i++)
+	{
+		_dots.SetDotRad(i, (double)radius);
+	}
 }
 /// @brief _dots 3개 점으로 외접원을 생성.
 /// @return 성공/ 실패

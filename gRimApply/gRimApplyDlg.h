@@ -54,7 +54,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	int _editThick;
+	int _editDotRad;
 
+	afx_msg void OnEnChangeEditDotrad();
 	afx_msg void OnBnClickedBtnInit();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
@@ -65,4 +67,7 @@ public:
 	afx_msg void OnDestroy();
 protected:
 	afx_msg LRESULT OnUpdateFrame(WPARAM wParam, LPARAM lParam);
+public:
+	// 점들의 좌표를 출력.
+	CStatic _staticDotPos;
 };
