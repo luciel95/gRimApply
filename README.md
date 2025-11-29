@@ -29,7 +29,8 @@
 
 ### 결과
 - 실행 이미지
-![실행결과]()
+ ![실행결과](https://github.com/luciel95/gRimApply/blob/master/%EC%8B%A4%ED%96%89%ED%99%94%EB%A9%B4.png)
+- gRimApply/gRimApply/bin/gRimApply.exe를 실행하여 확인
      
 ## 개발노트
 과제 페이지 링크 https://doc.clickup.com/25596452/p/h/rd4h4-262778/9faf6d2e66ff9e7
