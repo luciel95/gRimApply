@@ -8,6 +8,7 @@
 #include "gRimApplyDlg.h"
 #include "afxdialogex.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -81,7 +82,10 @@ void CgRimApplyDlg::RenderDots()
 /// @brief 정원 렌더링. 
 void CgRimApplyDlg::RenderLineCcl()
 {
-	Circle pCircle = *(theApp._circle->GetCircle());
+	if (nullptr == theApp._circle)
+		return;
+
+	Circle pCircle = *(theApp._circle->GetCircle()); //정원을 가져오기 전 할당여부를 확인해야한다.
 	double thickness = (double)theApp._circle->GetThickness();
 
 	pCircle.SetRadius(pCircle.GetRadius() + (thickness / 2)); //선을 위한 겹쳐그리기.
@@ -172,6 +176,20 @@ bool CgRimApplyDlg::IsInCircle(int x, int y, int cx, int cy, double radius)
 	else
 		return false;
 }
+/// @brief 점 세개를 무작위로 생성하여 외접원을 생성하고 화면에 그리는 작업을 초당 2회의 주기로 10회 반복
+/// @brief 스레드에서 작업
+void CgRimApplyDlg::RandomCreate()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		theApp.GenRandDots();
+		theApp.GenCircumccl();
+
+		PostMessage(WM_UPDATE_FRAME, 0, 0);
+
+		Sleep(500);
+	}
+}
 
 void CgRimApplyDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -189,6 +207,9 @@ BEGIN_MESSAGE_MAP(CgRimApplyDlg, CDialogEx)
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONUP()
 	ON_EN_CHANGE(IDC_EDIT_THK, &CgRimApplyDlg::OnChangeEditThk)
+	ON_BN_CLICKED(IDC_BTN_RNDMOV, &CgRimApplyDlg::OnBnClickedBtnRndmov)
+	ON_WM_DESTROY()
+	ON_MESSAGE(WM_UPDATE_FRAME, &CgRimApplyDlg::OnUpdateFrame)
 END_MESSAGE_MAP()
 
 
@@ -393,4 +414,46 @@ void CgRimApplyDlg::OnChangeEditThk()
 	}
 
 	Invalidate(FALSE);
+}
+
+void CgRimApplyDlg::OnBnClickedBtnRndmov()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (_thread.joinable())
+	{
+		_isStopThread = true;
+		_thread.join();
+		_isStopThread = false;
+	}
+	_thread = thread(&CgRimApplyDlg::RandomCreate, this);
+
+	ClearFrame();
+	if (nullptr == theApp._circle)
+	{
+		theApp.CreateCircle(0, 0, 0.0, _editThick);
+	}
+	Invalidate(FALSE);
+	//RandomCreate();
+}
+
+
+void CgRimApplyDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	if (_thread.joinable())
+	{
+		_isStopThread = true;
+		_thread.join();
+	}
+}
+
+afx_msg LRESULT CgRimApplyDlg::OnUpdateFrame(WPARAM wParam, LPARAM lParam)
+{
+	ClearFrame();
+	RenderLineCcl();
+	RenderDots();
+	Invalidate(FALSE);
+	return 0;
 }

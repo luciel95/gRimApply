@@ -29,6 +29,8 @@ CgRimApplyApp::CgRimApplyApp()
 	// TODO: 여기에 생성 코드를 추가합니다.
 	// InitInstance에 모든 중요한 초기화 작업을 배치합니다.
 	_circle = nullptr;
+	//time seed로 rand 초기화
+	srand((unsigned int)time(NULL));
 }
 
 
@@ -157,6 +159,50 @@ int CgRimApplyApp::IsInTheDot(int x, int y)
 	}
 	return -1;
 }
+/// @brief 입력된 좌표의 도트가 존재하는지 확인
+/// @param x 좌표
+/// @param y 좌표
+/// @return 존재:true / 부재:false
+bool CgRimApplyApp::IsDotExist(int x, int y)
+{
+	for (int i = 0; i < _dots.GetCount(); i++)
+	{
+		int dx = x - (_dots.GetDot(i)).GetX();
+		int dy = y - (_dots.GetDot(i)).GetY();
+		if (dx == 0 && dy == 0)
+			return true;
+	}
+	return false;
+}
+/// @brief 무작위로 도트 셋을 생성
+/// @return 성공/ 실패
+bool CgRimApplyApp::GenRandDots()
+{
+	// 랜덤 생성 
+	int x = 0;
+	int y = 0;
+	bool isRegen = true;
+
+	if (0 < _dots.GetCount())
+	{
+		_dots.Clear();
+	}
+
+	//삼각형 한개 무작위 생성
+	for (int i = 0; i < 3; i++)
+	{
+		do
+		{
+			x = rand() % RES_WIDTH;
+			y = rand() % RES_HEIGHT;
+
+			isRegen = IsDotExist(x, y);
+		} while (isRegen);
+		AddDot(x, y);
+		isRegen = true;
+	}
+	return true;
+}
 /// @brief _dots 3개 점으로 외접원을 생성.
 /// @return 성공/ 실패
 bool CgRimApplyApp::GenCircumccl()
@@ -164,7 +210,7 @@ bool CgRimApplyApp::GenCircumccl()
 	if (3 != _dots.GetCount())
 		return false; //원을 생성할 수 없다. 
 	if (nullptr == _circle)
-		return false; //정원이 생성되지 않았다. 
+		return false; //인스턴스가 할당되지 않았다. 
 
 	int x1 = (_dots.GetDot(0)).GetX();
 	int y1 = (_dots.GetDot(0)).GetY();

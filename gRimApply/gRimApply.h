@@ -160,6 +160,8 @@ public:
 	Dots GetDots();
 	bool AddDot(int x, int y);
 	int IsInTheDot(int x, int y);
+	bool IsDotExist(int x, int y);
+	bool GenRandDots();
 	void CreateCircle(int x, int y, double radius, int thick);
 	bool GenCircumccl();
 	void DeleteCircle();
